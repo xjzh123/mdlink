@@ -1,0 +1,25 @@
+:root {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  height: 100%;
+  display: flex;
+}
+
+#editor {
+  width: 30%;
+  height: 100%;
+  overflow: auto;
+
+  box-sizing: border-box;
+}
+
+#content {
+  width: 100%;
+  padding: 16px;
+  overflow: auto;
+
+  box-sizing: border-box;
+}
