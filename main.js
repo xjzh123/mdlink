@@ -38,8 +38,6 @@ editorEl.addEventListener('input', (e) => {
         }
       }
 
-      // editorEl.value = editorEl.value.slice(0, editorEl.selectionStart) + ' '.repeat(j - i - 1) + editorEl.value.slice(editorEl.selectionStart, -1)
-
       document.execCommand('insertText', false, ' '.repeat(j - i - 1))
     }
   }
