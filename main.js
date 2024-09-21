@@ -6,11 +6,18 @@ const url_content = url.searchParams.get('content')
 
 const contentEl = document.getElementById('content')
 
+const linkEl = document.getElementById('link')
+
+const toggleEdtiorEl = document.getElementById('toggle-editor')
+
+const toolsEl = document.getElementById('tools')
+
 /** @type {HTMLTextAreaElement} */
 const editorEl = document.getElementById('editor')
 
-if (url.searchParams.has('noeditor')) {
-  editorEl.style.display = 'none'
+if (!url.searchParams.has('noeditor')) {
+  toolsEl.classList.remove('hidden')
+  toggleEdtiorEl.classList.remove('hidden')
 }
 
 const md = createRenderer()
@@ -19,6 +26,8 @@ if (url_content) {
   contentEl.innerHTML = md.render(url_content)
   editorEl.value = url_content
 }
+
+linkEl.value = url
 
 editorEl.addEventListener('input', (e) => {
   console.debug('Input Event: ', e)
@@ -41,6 +50,13 @@ editorEl.addEventListener('input', (e) => {
       document.execCommand('insertText', false, ' '.repeat(j - i - 1))
     }
   }
+
+  if (editorEl.selectionStart === editorEl.selectionEnd && editorEl.selectionStart === editorEl.value.length) {
+    editorEl.scrollTo(editorEl.scrollLeft, editorEl.scrollHeight)
+    contentEl.scrollTo(contentEl.scrollLeft, contentEl.scrollHeight)
+  }
+
+  editorEl.value = editorEl.value.replace(/(?:(?!\n)\s)+\n/g, '\n')
 })
 
 editorEl.addEventListener('input', (e) => {
@@ -51,4 +67,18 @@ editorEl.addEventListener('input', (e) => {
   url.searchParams.set('content', content)
 
   history.pushState(null, null, url)
+
+  linkEl.value = url
+})
+
+linkEl.addEventListener('click', (e) => {
+  navigator.clipboard.writeText(url)
+  linkEl.value = 'Copied to clipboard!'
+  setTimeout(() => {
+    linkEl.value = url
+  }, 500);
+})
+
+toggleEdtiorEl.addEventListener('click', (e) => {
+  toolsEl.style.display = toolsEl.style.display ? '' : 'none'
 })

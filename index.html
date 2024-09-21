@@ -9,8 +9,18 @@
 </head>
 
 <body>
-  <textarea id="editor"></textarea>
-  <article id="content"></article>
+  <div id="tools" class="hidden">
+    <textarea id="editor"></textarea>
+    <div id="toolbar">
+      <textarea id="link" readonly></textarea>
+    </div>
+  </div>
+  <div id="content-wrap-wrap">
+    <div id="content-wrap">
+      <button id="toggle-editor" type="button" class="hidden">↔</button>
+    </div>
+    <article id="content"></article>
+  </div>
   <script type="module" src="/main.js"></script>
 </body>
 
