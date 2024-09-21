@@ -2,7 +2,21 @@ import { createRenderer } from "./markdown"
 
 const url = new URL(location)
 
-const url_content = url.searchParams.get('content')
+const searchParams = new URLSearchParams(url.hash.slice(1))
+
+if (url.searchParams.size) {
+  for (let [key, val] of url.searchParams.entries()) {
+    searchParams.set(key, val)
+  }
+
+  url.search = ''
+
+  url.hash = searchParams.toString()
+
+  history.pushState(null, null, url)
+}
+
+const url_content = searchParams.get('content')
 
 const contentEl = document.getElementById('content')
 
@@ -12,12 +26,16 @@ const toggleEdtiorEl = document.getElementById('toggle-editor')
 
 const toolsEl = document.getElementById('tools')
 
+let isEditorHidden = true
+
 /** @type {HTMLTextAreaElement} */
 const editorEl = document.getElementById('editor')
 
-if (!url.searchParams.has('noeditor')) {
+if (!searchParams.has('noeditor') || searchParams.get('noeditor') === 'false') {
   toolsEl.classList.remove('hidden')
   toggleEdtiorEl.classList.remove('hidden')
+
+  isEditorHidden = false
 }
 
 const md = createRenderer()
@@ -64,21 +82,35 @@ editorEl.addEventListener('input', (e) => {
 
   contentEl.innerHTML = md.render(content)
 
-  url.searchParams.set('content', content)
+  searchParams.set('content', content)
+
+  url.hash = searchParams.toString()
 
   history.pushState(null, null, url)
 
-  linkEl.value = url
+  linkEl.value = url.toString()
 })
 
 linkEl.addEventListener('click', (e) => {
-  navigator.clipboard.writeText(url)
+  navigator.clipboard.writeText(url.toString())
   linkEl.value = 'Copied to clipboard!'
   setTimeout(() => {
-    linkEl.value = url
+    linkEl.value = url.toString()
   }, 500);
 })
 
 toggleEdtiorEl.addEventListener('click', (e) => {
-  toolsEl.style.display = toolsEl.style.display ? '' : 'none'
+  toolsEl.style.display = isEditorHidden ? '' : 'none'
+
+  isEditorHidden = !isEditorHidden
+
+  if (isEditorHidden) {
+    searchParams.set('noeditor', 'true')
+  } else {
+    searchParams.delete('noeditor')
+  }
+
+  url.hash = searchParams.toString()
+
+  history.pushState(null, null, url)
 })
