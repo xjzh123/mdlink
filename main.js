@@ -4,7 +4,7 @@ const url = new URL(location)
 
 const searchParams = new URLSearchParams(url.hash.slice(1))
 
-if (url.searchParams.size) {
+if (url.searchParams.size ?? url.searchParams.toString().length) {
   for (let [key, val] of url.searchParams.entries()) {
     searchParams.set(key, val)
   }
