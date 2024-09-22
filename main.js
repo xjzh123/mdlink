@@ -54,28 +54,7 @@ if (url_content) {
 
 linkEl.value = url
 
-editorEl.addEventListener('input', (e) => {
-  console.debug('Input Event: ', e)
-
-  if (e.inputType === 'insertLineBreak' || e.data === '\n') {
-    if (editorEl.selectionStart === editorEl.selectionEnd) {
-      let i = editorEl.selectionStart - 1
-      while (i-- >= 0) {
-        if (editorEl.value.charAt(i) === '\n') {
-          break
-        }
-      }
-      let j = i
-      while (j++) {
-        if (editorEl.value.charAt(j) !== ' ') {
-          break
-        }
-      }
-
-      document.execCommand('insertText', false, ' '.repeat(j - i - 1))
-    }
-  }
-
+editorEl.addEventListener('input', () => {
   if (editorEl.selectionStart === editorEl.selectionEnd && editorEl.selectionStart === editorEl.value.length) {
     editorEl.scrollTo(editorEl.scrollLeft, editorEl.scrollHeight)
     contentEl.scrollTo(contentEl.scrollLeft, contentEl.scrollHeight)
