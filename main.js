@@ -60,7 +60,7 @@ editorEl.addEventListener('input', (e) => {
   if (e.inputType === 'insertLineBreak' || e.data === '\n') {
     if (editorEl.selectionStart === editorEl.selectionEnd) {
       let i = editorEl.selectionStart - 1
-      while (i--) {
+      while (i-- >= 0) {
         if (editorEl.value.charAt(i) === '\n') {
           break
         }
@@ -80,8 +80,6 @@ editorEl.addEventListener('input', (e) => {
     editorEl.scrollTo(editorEl.scrollLeft, editorEl.scrollHeight)
     contentEl.scrollTo(contentEl.scrollLeft, contentEl.scrollHeight)
   }
-
-  editorEl.value = editorEl.value.replace(/(?:(?!\n)\s)+\n/g, '\n')
 })
 
 editorEl.addEventListener('input', (e) => {
