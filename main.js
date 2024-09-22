@@ -31,11 +31,18 @@ let isEditorHidden = true
 /** @type {HTMLTextAreaElement} */
 const editorEl = document.getElementById('editor')
 
-if (!searchParams.has('noeditor') || searchParams.get('noeditor') === 'false') {
-  toolsEl.classList.remove('hidden')
+const isSearchParamFalse = (key) => {
+  return !searchParams.has(key) || searchParams.get(key) === 'false'
+}
+
+if (isSearchParamFalse('noeditor')) {
   toggleEdtiorEl.classList.remove('hidden')
 
-  isEditorHidden = false
+  if (isSearchParamFalse('hideeditor')) {
+    toolsEl.classList.remove('hidden')
+
+    isEditorHidden = false
+  }
 }
 
 const md = createRenderer()
@@ -100,14 +107,14 @@ linkEl.addEventListener('click', (e) => {
 })
 
 toggleEdtiorEl.addEventListener('click', (e) => {
-  toolsEl.style.display = isEditorHidden ? '' : 'none'
+  toolsEl.classList.toggle('hidden')
 
   isEditorHidden = !isEditorHidden
 
   if (isEditorHidden) {
-    searchParams.set('noeditor', 'true')
+    searchParams.set('hideeditor', 'true')
   } else {
-    searchParams.delete('noeditor')
+    searchParams.delete('hideeditor')
   }
 
   url.hash = searchParams.toString()
